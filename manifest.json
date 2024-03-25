@@ -5,10 +5,16 @@
     "action": {
         "default_popup": "popup/index.html"
     },
+    "options_page": "page/index.html",
     "content_scripts": [
         {
-          "matches": ["https://www.youtube.com/*"],
-          "js": ["Content.js"]
+            "matches": ["https://www.youtube.com/*", "https://www.instagram.com/*", "https://www.tiktok.com/*", "https://www.twitter.com/*"],
+            "js": ["scripts/scrolling-timeout.js"]
         }
-      ]
+    ],
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "storage"
+    ]
 }
