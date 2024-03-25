@@ -1,1 +1,8 @@
-{}
+{
+    "manifest_version": 3,
+    "name": "PA Media and Design 2024",
+    "version": "1.0",
+    "action": {
+        "default_popup": "popup/index.html"
+    }
+}
