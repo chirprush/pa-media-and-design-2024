@@ -4,5 +4,11 @@
     "version": "1.0",
     "action": {
         "default_popup": "popup/index.html"
-    }
+    },
+    "content_scripts": [
+        {
+          "matches": ["https://www.youtube.com/*"],
+          "js": ["Content.js"]
+        }
+      ]
 }
