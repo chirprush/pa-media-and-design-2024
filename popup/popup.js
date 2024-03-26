@@ -1,5 +1,3 @@
-console.log("Note: popup.js running");
-
 // As per https://developer.chrome.com/docs/extensions/develop/ui/options-page
 document.querySelector("#options-link").addEventListener("click", () => {
     if (chrome.runtime.openOptionsPage) {

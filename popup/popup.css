@@ -1,0 +1,19 @@
+html {
+    /* NOTE: We will change this later for styling but this is for me to know that
+     * the styling is working */
+    background-color: #282c34;
+    color: white;
+
+    min-width: 400px;
+    min-height: 600px;
+}
+
+body {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+/* Hides scroll bar because it doesn't look very nice */
+body::-webkit-scrollbar {
+    display: none;
+}
