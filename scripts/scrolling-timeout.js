@@ -13,3 +13,4 @@ chrome.storage.local.get(["test"]).then((result) => {
     console.log(result.test);
     console.log(new Date(Date.parse(result.test.dates[0])).getDay());
 });
+
