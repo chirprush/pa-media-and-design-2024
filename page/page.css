@@ -63,3 +63,85 @@ body {
     margin-top: 0;
     font-size: 20px;
 }
+
+
+.calendar {
+    width: 600px;
+    font-size: 30px;
+    
+    background-color: #eff4f5;
+    border-radius: 10px;
+}
+
+.calendar-content {
+    width: 90%;
+    margin: auto;
+
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* NOTE: Haresh if this looks sus you should probably fix it. */
+
+.calendar-header {
+    margin-bottom: 30px;
+
+    background-color: #dfe4e5;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 5px;
+}
+
+.calendar-header div {
+    display: inline-block;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.calendar-header #calendar-year {
+    float: right;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+
+    margin-bottom: 10px;
+
+    background-color: #dfe4e5;
+    border-radius: 5px;
+}
+
+.calendar-weekdays div {
+    display: grid;
+    place-items: center;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    place-items: center;
+}
+
+#calendar-month {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.calendar-days div {
+    padding-left: 15px;
+    padding-right: 15px;
+    display: grid;
+
+    border-radius: 5px;
+
+    transition: background 0.2s;
+}
+
+.selected {
+    background-color: #cfd4d5;
+}
+
+.calendar-days div:hover {
+    background-color: #dfe4e5;
+}
