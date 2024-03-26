@@ -1,5 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&display=swap');
+
 body {
-    /* NOTE: As stated in popup/popup.css, this should be changed later probably */
-    background-color: #282c34;
-    color: white;
+    /* NOTE: As stated in popup/popup.css, this should be changed later
+     * probably */
+    background-color: white;
+    color: black;
+
+    padding: 0;
+    margin: 0;
+
+    font-family: "Source Sans 3", sans-serif;
+}
+
+/* NOTE: Use media to disable this when on mobile? I'll leave Haresh to deal
+ * with all of the responsiveness later I suppose */
+.side-nav {
+    height: 100%;
+    width: 300px;
+    position: fixed;
+
+    background-color: #eff4f5;
+    padding-top: 50px;
+
+    top: 0;
+    left: 0;
+}
+
+.side-nav a {
+    text-decoration: none;
+    display: block;
+
+    margin-bottom: 20px;
+    /* margin-left: 50px; */
+    margin-left: 25px;
+    border-radius: 5px;
+    width: 250px;
+
+    background-color: #eff4f5;
+
+    text-align: center;
+
+    font-size: 25px;
+
+    color: black;
+    font-weight: bold;
+
+    transition: background 0.2s;
+}
+
+.side-nav a:hover {
+    background: #dfe4e5;
+}
+
+.main {
+    width: calc(70vw - 300px);
+    margin-left: calc(300px + 5%);
+
+    font-size: 20px;
+}
+
+.title-bar {
+    margin-top: 0;
+    font-size: 20px;
 }
