@@ -91,6 +91,9 @@ function getDomain(link) {
 };
 
 function updateTime() {
+
+    
+
     let presentDate = new Date(Date.now()).toDateString();
 
     chrome.storage.local.get({ list: [] }, function (trackedSites) {
@@ -185,3 +188,4 @@ document.getElementById("submit-block").onclick = function() {
         }
     });
 }
+
