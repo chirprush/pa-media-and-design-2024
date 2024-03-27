@@ -136,6 +136,10 @@ function updateTime() {
                         chrome.storage.local.set(storedObject, function () {
                             console.log(domain + " at " + storedObject[presentDate][domain]);
                         });
+
+                        if (storedObject[presentDate][domain] > 600){
+                            
+                        }
                     }
                     else {
                         currentTime++;
@@ -158,14 +162,14 @@ function updateTime() {
     });
 };
 
-var intervalID = setInterval(updateTime, 500);
-setInterval(checkFocus, 500);
+var intervalID = setInterval(updateTime, 100);
+setInterval(checkFocus, 100);
 
 function checkFocus() {
     chrome.windows.getCurrent(function (window) {
         if (window.focused) {
             if (!intervalID) {
-                intervalID = setInterval(updateTime, 1000);
+                intervalID = setInterval(updateTime, 100);
             }
         }
         else {
