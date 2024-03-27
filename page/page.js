@@ -186,10 +186,16 @@ document.getElementById("submit-block").onclick = function() {
     });
 }
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    window.alert()
-});
+document.getElementById("submit-time").onclick = function() {
+    var time = parseInt(document.getElementById("blocked-site-time").value);
 
-chrome.tabs.onCreated.addListener(function(tab) {         
-   insertDictionaryScript();
-});
+    chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
+}
+
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+//     window.alert("ashdfjsa");
+// });
+
+// chrome.tabs.onCreated.addListener(function(tab) {         
+//     window.alert("jaslkdfsdfas");
+// });
