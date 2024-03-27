@@ -8,9 +8,18 @@
 // NOTE: We should probably also test if the url is in one of the website urls
 // because this script will run on every website visited
 
-chrome.storage.local.get(["test"]).then((result) => {
-    console.log("Result:");
-    console.log(result.test);
-    console.log(new Date(Date.parse(result.test.dates[0])).getDay());
+// Default initializes the key values that we need
+chrome.storage.local.get(["events", "times", "sites"]).then((result) => {
+    if (result.events === undefined) {
+        chrome.storage.local.set({ events: [] }).then(() => {});
+    }
+
+    if (result.times === undefined) {
+        chrome.storage.local.set({ times: [] }).then(() => {});
+    }
+
+    if (result.sites === undefined) {
+        chrome.storage.local.set({ sites: [] }).then(() => {});
+    }
 });
 

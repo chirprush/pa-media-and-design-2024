@@ -18,8 +18,9 @@ Example:
     "events" : [
         {
             "title" : "Work on PA Media and Design",
-            "dates" : ["Mon Mar 25 2024"],
-            "times" : [[48, 49, 50, 51]]
+            "date" : "Mon Mar 25 2024",
+            "times" : [48, 49, 50, 51],
+            "completed" : false
         }
     ],
     "times" : {
@@ -33,12 +34,12 @@ Example:
     ]
 }
 
-Each event shall have a title and a list of date strings for which the event is
-valid. Each element in dates shall have a corresponding array of times for
-which the event shall be considered running. This array is actually an array of
-integers, corresponding to one of the 24 * (60 / 15) = 96 blocks of time
-created when you divide the day into 15 minute intervals. In this example, [48,
-49, 50, 51] corresponds to 12 pm to 1 pm.
+Each event shall have a title and a date string for which the event is valid.
+The date shall have a corresponding array of times for which the event shall be
+considered running. This array is actually an array of integers, corresponding
+to one of the 24 * (60 / 15) = 96 blocks of time created when you divide the
+day into 15 minute intervals. In this example, [48, 49, 50, 51] corresponds to
+12 pm to 1 pm. We also keep track of whether or not the event is completed or not for obvious reasons.
 
 As a note, all Date objects should be serialized to date strings as seen above
 by using `.toDateString()`. These can be deserialized back to Date objects
