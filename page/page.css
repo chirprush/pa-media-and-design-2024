@@ -138,10 +138,23 @@ body {
     transition: background 0.2s;
 }
 
+.calendar-days div:hover {
+    background-color: #dfe4e5;
+}
+
+.time-slice {
+    width: 5px;
+    height: 50px;
+
+    display: inline-block;
+    margin-left: 0;
+    margin-right: -5px;
+    border: solid 1px #dfe4e5;
+
+    background-color: white;
+}
+
 .selected {
     background-color: #cfd4d5;
 }
 
-.calendar-days div:hover {
-    background-color: #dfe4e5;
-}

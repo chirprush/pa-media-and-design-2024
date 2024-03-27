@@ -13,8 +13,6 @@ let monthNames = [
     "December"
 ];
 
-// const dayLength = 1000 * 60 * 60 * 24;
-
 const daysInMonth = (year, month) => {
     return new Date(year, month + 1, 0).getDate();
 };
@@ -41,10 +39,25 @@ const displayFromDate = (currentTime) => {
         let el = document.getElementById("day-slot" + i);
         if (i >= dayOfWeek && i < dayOfWeek + daysInMonth(it.getFullYear(), it.getMonth())) {
             // Give each element a date object?
+            // NOTE: Also check to see if there are any events this day and highlight them.
             el.innerText = "" + (i - dayOfWeek + 1);
         } else {
             el.innerText = "";
         }
+    }
+};
+
+// If true, then dragging will select times; otherwise, it will remove them.
+let isSelectingTime = true;
+
+const resetTimes = () => {
+    isSelectingTime = true;
+
+    // NOTE: If we change the time slices to 5, we'll have to change this later
+    for (let i = 0; i < 96; i++) {
+        let el = document.getElementById("time-slice-" + i);
+
+        el.className = "time-slice";
     }
 };
 
