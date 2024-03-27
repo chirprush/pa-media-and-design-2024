@@ -48,13 +48,18 @@ NOTE: We should probably initialize this schema somewhere when the extension
 starts or something.
 */
 
-chrome.storage.local.set({ test: {"title": "Hello", "dates": [new Date().toDateString()]} }).then(() => {});
+// chrome.storage.local.set({ test: {"title": "Hello", "dates": [new Date().toDateString()]} }).then(() => {});
 
-chrome.storage.local.get(["test"]).then((result) => {
-    console.log("Result:");
-    console.log(result.test);
-    console.log(new Date(Date.parse(result.test.dates[0])).getDay());
-});
+// chrome.storage.local.get(["test"]).then((result) => {
+//     console.log("help me please");
+//     console.log("Result:");
+//     console.log(result.test);
+//     console.log(new Date(Date.parse(result.test.dates[0])).getDay());
+// });
+
+// chrome.storage.local.set({list:[], function() {
+//     console.log("created tracked sites list");
+// }});
 
 function isValidURL(givenURL) {
     if (givenURL) {
@@ -70,17 +75,8 @@ function isValidURL(givenURL) {
     }
 }
 
-function getDateString(date) {
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    if (day < 10) { day = "0" + day; };
-    if (month < 10) { month = "0" + month; };
-    let finalDate = year + "-" + month + "-" + day;
-    return finalDate;
-}
 function getDomain(link) {
-    try{
+    try {
         if (link) {
             return link[0].url.split("/")[2];
         }
@@ -88,20 +84,50 @@ function getDomain(link) {
             return null;
         }
     }
-    catch(err){
+    catch (err) {
         console.log("bad things part 2");
     }
 };
 
 function updateTime() {
+    let presentDate = new Date(Date.now()).toDateString();
+
+    chrome.storage.local.get({ list: [] }, function (trackedSites) {
+        // console.log(trackedSites.list);
+        let sites = "";
+        for (let i = 0; i < trackedSites.list.length; i++) {
+            sites += trackedSites.list[i] + "<br>";
+        }
+        document.getElementById("blocklist").innerHTML = sites;
+    });
+
+    chrome.storage.local.get({ list: [] }, function (trackedSites) {
+        chrome.storage.local.get(presentDate, function (storedObject) {
+            let output = "";
+            console.log(storedObject);
+            for (let i = 0; i < trackedSites.list.length; i++) {
+                let ok = false;
+                let site = "";
+                for (let key of Object.keys(storedObject[presentDate])) {
+                    if (key.includes(trackedSites.list[i])) {
+                        site = key;
+                        ok = true;
+                    }
+                }
+                if (ok) {
+                    output += trackedSites.list[i] + ": " + storedObject[presentDate][site] + " seconds <br>";
+                }
+            }
+            document.getElementById("timelist").innerHTML = output;
+        });
+    });
+    
     chrome.tabs.query({ "active": true, "lastFocusedWindow": true }, function (activeTab) {
         let domain = getDomain(activeTab);
         if (isValidURL(domain)) {
-            let presentDate = new Date(Date.now()).toDateString();
             let currentTime = 0;
             chrome.storage.local.get(presentDate, function (storedObject) {
-                console.log(storedObject);
-                console.log(presentDate);
+                // console.log(storedObject);
                 if (storedObject[presentDate]) {
                     if (storedObject[presentDate][domain]) {
                         currentTime = storedObject[presentDate][domain] + 1;
@@ -115,7 +141,7 @@ function updateTime() {
                         storedObject[presentDate][domain] = currentTime;
                         chrome.storage.local.set(storedObject, function () {
                             console.log(domain + " at " + storedObject[presentDate][domain]);
-                        })
+                        });
                     }
                 }
                 else {
@@ -131,7 +157,7 @@ function updateTime() {
     });
 };
 
-var intervalID = setInterval(updateTime, 1000);
+var intervalID = setInterval(updateTime, 500);
 setInterval(checkFocus, 500);
 
 function checkFocus() {
@@ -146,6 +172,15 @@ function checkFocus() {
                 clearInterval(intervalID);
                 intervalID = null;
             }
+        }
+    });
+}
+document.getElementById("submit-block").onclick = function() {
+    var blockedWebsite = document.getElementById("blocked-site").value;
+    chrome.storage.local.get({list:[]}, function (trackedSites) {
+        if(isValidURL(blockedWebsite) && !trackedSites.list.includes(blockedWebsite)){
+            trackedSites.list.push(blockedWebsite);
+            chrome.storage.local.set({ list: trackedSites.list }, function () { console.log("site added"); });
         }
     });
 }
