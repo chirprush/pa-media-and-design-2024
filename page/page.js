@@ -92,35 +92,6 @@ function getDomain(link) {
 
 function updateTime() {
     let presentDate = new Date(Date.now()).toDateString();
-
-    chrome.storage.local.get({ list: [] }, function (trackedSites) {
-        // console.log(trackedSites.list);
-        let sites = "";
-        for (let i = 0; i < trackedSites.list.length; i++) {
-            sites += trackedSites.list[i] + "<br>";
-        }
-        document.getElementById("blocklist").innerHTML = sites;
-    });
-
-    chrome.storage.local.get({ list: [] }, function (trackedSites) {
-        chrome.storage.local.get(presentDate, function (storedObject) {
-            let output = "";
-            for (let i = 0; i < trackedSites.list.length; i++) {
-                let ok = false;
-                let site = "";
-                for (let key of Object.keys(storedObject[presentDate])) {
-                    if (key.includes(trackedSites.list[i])) {
-                        site = key;
-                        ok = true;
-                    }
-                }
-                if (ok) {
-                    output += trackedSites.list[i] + ": " + storedObject[presentDate][site] + " seconds <br>";
-                }
-            }
-            document.getElementById("timelist").innerHTML = output;
-        });
-    });
     
     chrome.tabs.query({ "active": true, "lastFocusedWindow": true }, function (activeTab) {
         let domain = getDomain(activeTab);
@@ -181,20 +152,12 @@ function checkFocus() {
         }
     });
 }
-document.getElementById("submit-block").onclick = function() {
-    var blockedWebsite = document.getElementById("blocked-site").value;
-    chrome.storage.local.get({list:[]}, function (trackedSites) {
-        if(isValidURL(blockedWebsite) && !trackedSites.list.includes(blockedWebsite)){
-            trackedSites.list.push(blockedWebsite);
-            chrome.storage.local.set({ list: trackedSites.list }, function () { console.log("site added"); });
-        }
-    });
-}
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    window.alert()
+chrome.tabs.onActivated.addListener((activeInfo) => {
+    console.log(activeInfo);
 });
 
-chrome.tabs.onCreated.addListener(function(tab) {         
-   insertDictionaryScript();
+/*
+chrome.tabs.onCreated.addListener((tab) => {         
 });
+*/
