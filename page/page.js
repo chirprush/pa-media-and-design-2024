@@ -184,7 +184,13 @@ function checkFocus() {
 document.getElementById("submit-block").onclick = function() {
     var blockedWebsite = document.getElementById("blocked-site").value;
     chrome.storage.local.get({list:[]}, function (trackedSites) {
-        if(isValidURL(blockedWebsite) && !trackedSites.list.includes(blockedWebsite)){
+        let ok = false;
+        for(let i = 0; i < trackedSites.list; i++){
+            if(blockedWebsite.includes(trackedSites.list[i])){
+                ok = true;
+            }
+        }
+        if(isValidURL(blockedWebsite) && !ok && !trackedSites.list.includes(blockedWebsite)){
             trackedSites.list.push(blockedWebsite);
             chrome.storage.local.set({ list: trackedSites.list }, function () { console.log("site added"); });
         }
