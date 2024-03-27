@@ -9,7 +9,7 @@
 // because this script will run on every website visited
 
 // Default initializes the key values that we need
-chrome.storage.local.get(["events", "times", "sites"]).then((result) => {
+chrome.storage.local.get(["events", "times", "sites", "globalTimeLimit"]).then((result) => {
     if (result.events === undefined) {
         chrome.storage.local.set({ events: [] }).then(() => {});
     }
@@ -20,6 +20,10 @@ chrome.storage.local.get(["events", "times", "sites"]).then((result) => {
 
     if (result.sites === undefined) {
         chrome.storage.local.set({ sites: [] }).then(() => {});
+    }
+
+    if (results.globalTimeLimit === undefined) {
+        chrome.storage.local.set({ globalTimeLimit: 5 }).then(() => {});
     }
 });
 
