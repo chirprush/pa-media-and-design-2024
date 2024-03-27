@@ -291,7 +291,7 @@ input[type=text]:focus {
 }
 
 .button-78:before {
-  background-image: linear-gradient(92.83deg, #ff7426 0, #f93a13 100%);
+  background-image: linear-gradient(92.83deg, #1191FC 0, #f443fd 100%);
   content: "";
   display: block;
   height: 100%;
@@ -305,7 +305,7 @@ input[type=text]:focus {
 
 .button-78:after {
   background-color: initial;
-  background-image: linear-gradient(#541a0f 0, #0c0d0d 100%);
+  background-image: linear-gradient(#04243F 0, #0c0d0d 100%);
   bottom: 4px;
   content: "";
   display: block;
@@ -319,7 +319,7 @@ input[type=text]:focus {
 }
 
 .button-78:hover:not(:disabled):before {
-  background: linear-gradient(92.83deg, rgb(255, 116, 38) 0%, rgb(249, 58, 19) 100%);
+  background: linear-gradient(92.83deg, rgb(17, 145, 252) 0%, rgb(244, 67, 253) 100%);
 }
 
 .button-78:hover:not(:disabled):after {
@@ -336,11 +336,11 @@ input[type=text]:focus {
 }
 
 .button-78:active:not(:disabled):before {
-  background-image: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(92.83deg, #ff7426 0, #f93a13 100%);
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(92.83deg, #1191FC 0, #f443fd 100%);
 }
 
 .button-78:active:not(:disabled):after {
-  background-image: linear-gradient(#541a0f 0, #0c0d0d 100%);
+  background-image: linear-gradient(#04243F 0, #0c0d0d 100%);
   bottom: 4px;
   left: 4px;
   right: 4px;
@@ -351,3 +351,5 @@ input[type=text]:focus {
   cursor: default;
   opacity: .24;
 }
+
+/* Kanban */
