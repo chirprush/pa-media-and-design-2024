@@ -92,36 +92,6 @@ function getDomain(link) {
 
 function updateTime() {
     let presentDate = new Date(Date.now()).toDateString();
-
-    chrome.storage.local.get({ list: [] }, function (trackedSites) {
-        // console.log(trackedSites.list);
-        let sites = "";
-        for (let i = 0; i < trackedSites.list.length; i++) {
-            sites += trackedSites.list[i] + "<br>";
-        }
-        document.getElementById("blocklist").innerHTML = sites;
-    });
-
-    chrome.storage.local.get({ list: [] }, function (trackedSites) {
-        chrome.storage.local.get(presentDate, function (storedObject) {
-            let output = "";
-            console.log(storedObject);
-            for (let i = 0; i < trackedSites.list.length; i++) {
-                let ok = false;
-                let site = "";
-                for (let key of Object.keys(storedObject[presentDate])) {
-                    if (key.includes(trackedSites.list[i])) {
-                        site = key;
-                        ok = true;
-                    }
-                }
-                if (ok) {
-                    output += trackedSites.list[i] + ": " + storedObject[presentDate][site] + " seconds <br>";
-                }
-            }
-            document.getElementById("timelist").innerHTML = output;
-        });
-    });
     
     chrome.tabs.query({ "active": true, "lastFocusedWindow": true }, function (activeTab) {
         let domain = getDomain(activeTab);
@@ -136,6 +106,12 @@ function updateTime() {
                         chrome.storage.local.set(storedObject, function () {
                             console.log(domain + " at " + storedObject[presentDate][domain]);
                         });
+
+                        if (storedObject[presentDate][domain] >= 30){
+                            chrome.tabs.query({"active": true, "currentWindow": true}, function (tabs) {
+                                chrome.tabs.remove(tabs[0].id);
+                            }); 
+                        }
                     }
                     else {
                         currentTime++;
@@ -158,14 +134,14 @@ function updateTime() {
     });
 };
 
-var intervalID = setInterval(updateTime, 500);
-setInterval(checkFocus, 500);
+var intervalID = setInterval(updateTime, 100);
+setInterval(checkFocus, 100);
 
 function checkFocus() {
     chrome.windows.getCurrent(function (window) {
         if (window.focused) {
             if (!intervalID) {
-                intervalID = setInterval(updateTime, 1000);
+                intervalID = setInterval(updateTime, 100);
             }
         }
         else {
@@ -176,26 +152,9 @@ function checkFocus() {
         }
     });
 }
-document.getElementById("submit-block").onclick = function() {
-    var blockedWebsite = document.getElementById("blocked-site").value;
-    chrome.storage.local.get({list:[]}, function (trackedSites) {
-        if(isValidURL(blockedWebsite) && !trackedSites.list.includes(blockedWebsite)){
-            trackedSites.list.push(blockedWebsite);
-            chrome.storage.local.set({ list: trackedSites.list }, function () { console.log("site added"); });
-        }
-    });
-}
 
 document.getElementById("submit-time").onclick = function() {
     var time = parseInt(document.getElementById("blocked-site-time").value);
 
     chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
 }
-
-// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-//     window.alert("ashdfjsa");
-// });
-
-// chrome.tabs.onCreated.addListener(function(tab) {         
-//     window.alert("jaslkdfsdfas");
-// });
