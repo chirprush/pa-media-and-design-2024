@@ -107,11 +107,14 @@ function updateTime() {
                             console.log(domain + " at " + storedObject[presentDate][domain]);
                         });
 
-                        if (storedObject[presentDate][domain] >= 30){
-                            chrome.tabs.query({"active": true, "currentWindow": true}, function (tabs) {
-                                chrome.tabs.remove(tabs[0].id);
-                            }); 
-                        }
+                        chrome.storage.local.get("globalTimeLimit", function (globalTimeLimit) {
+                            if (storedObject[presentDate][domain] >= globalTimeLimit.globalTimeLimit){
+                                chrome.tabs.query({"active": true, "currentWindow": true}, function (tabs) {
+                                    chrome.tabs.remove(tabs[0].id);
+                                }); 
+                            }
+                        });
+                        
                     }
                     else {
                         currentTime++;
@@ -153,8 +156,4 @@ function checkFocus() {
     });
 }
 
-document.getElementById("submit-time").onclick = function() {
-    var time = parseInt(document.getElementById("blocked-site-time").value);
 
-    chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
-}
