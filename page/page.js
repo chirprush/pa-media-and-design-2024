@@ -105,7 +105,6 @@ function updateTime() {
     chrome.storage.local.get({ list: [] }, function (trackedSites) {
         chrome.storage.local.get(presentDate, function (storedObject) {
             let output = "";
-            console.log(storedObject);
             for (let i = 0; i < trackedSites.list.length; i++) {
                 let ok = false;
                 let site = "";
@@ -137,8 +136,10 @@ function updateTime() {
                             console.log(domain + " at " + storedObject[presentDate][domain]);
                         });
 
-                        if (storedObject[presentDate][domain] > 600){
-                            
+                        if (storedObject[presentDate][domain] >= 30){
+                            chrome.tabs.query({"active": true, "currentWindow": true}, function (tabs) {
+                                chrome.tabs.remove(tabs[0].id);
+                            }); 
                         }
                     }
                     else {
