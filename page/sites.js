@@ -61,3 +61,9 @@ document.getElementById("submit-block").onclick = function() {
     });
 }
 
+document.getElementById("submit-time").onclick = function() {
+    var time = parseInt(document.getElementById("blocked-site-time").value);
+
+    chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
+}
+
