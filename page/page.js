@@ -190,3 +190,11 @@ document.getElementById("submit-block").onclick = function() {
         }
     });
 }
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    window.alert()
+});
+
+chrome.tabs.onCreated.addListener(function(tab) {         
+   insertDictionaryScript();
+});

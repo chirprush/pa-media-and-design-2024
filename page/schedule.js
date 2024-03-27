@@ -75,10 +75,12 @@ const displayFromDate = (currentTime) => {
 // If true, then dragging will select times; otherwise, it will remove them.
 let isSelectingTime = true;
 let isMouseDown = false;
+let selectStart = null;
 
 const resetTimes = () => {
     isSelectingTime = true;
     isMouseDown = false;
+    selectStart = null;
 
     // NOTE: If we change the time slices to 5, we'll have to change this later
     for (let i = 0; i < 96; i++) {
@@ -99,6 +101,7 @@ const resetTimes = () => {
 let onSlicePress = (slice, sliceId) => {
     isMouseDown = true;
     isSelectingTime = !(slice.classList.contains("selected"));
+    selectStart = sliceId;
 
     if (isSelectingTime) {
         slice.classList.add("selected");
@@ -114,11 +117,26 @@ let onSliceRelease = (slice, sliceId) => {
 let onSliceHover = (slice, sliceId) => {
     if (!isMouseDown) { return; }
 
-    if (isSelectingTime) {
-        slice.classList.add("selected");
-    } else {
-        slice.classList.remove("selected");
+    let diff = selectStart < sliceId ? 1 : -1;
+
+    for (let i = selectStart; i != sliceId + diff; i += diff) {
+        let s = document.getElementById("time-slice-" + i);
+        if (isSelectingTime) {
+            s.classList.add("selected");
+        } else {
+            s.classList.remove("selected");
+        }
     }
+};
+
+window.onmousedown = () => {
+    isMouseDown = true;
+    selectStart = selectStart === null ? 0 : selectStart;
+};
+
+window.onmouseup = () => {
+    isMouseDown = false;
+    selectStart = null;
 };
 
 let currentDate = new Date(Date.now());

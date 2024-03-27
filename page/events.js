@@ -1,25 +1,88 @@
-window.onload = () => {
+// Turns the array of time slice indices into human readable time strings
+let blockTimes = (times) => {
+    let blocks = [];
+
+    for (let i = 0; i < times.length; i++) {
+        if (blocks.length === 0) {
+            blocks.push([times[i], times[i]]);
+            continue;
+        }
+
+        let prev = blocks[blocks.length - 1];
+
+        if (times[i] - 1 === prev[1]) {
+            prev[1] = times[i];
+        } else {
+            blocks.push([times[i], times[i]]);
+        }
+    }
+
+    let readableTimes = [];
+
+    let toReadable = (t) => {
+        let hour = Math.floor(t / 4);
+        let minute = "" + 15 * (t - 4 * hour);
+        let pm = hour >= 12;
+        
+        hour = hour % 12;
+        hour = hour === 0 ? 12 : hour;
+
+        return hour + ":" + minute.padStart(2, "0") + " " + (pm ? "PM" : "AM");
+    };
+
+    for (let i = 0; i < blocks.length; i++) {
+        let begin = blocks[i][0];
+        let end = blocks[i][1] + 1;
+
+        readableTimes.push(toReadable(begin) + "-" + toReadable(end));
+    }
+
+    return readableTimes;
+};
+
+let reloadTasks = () => {
     let todoTasks = document.getElementById("todo-tasks");
     let completedTasks = document.getElementById("completed-tasks");
 
+    todoTasks.replaceChildren();
+    completedTasks.replaceChildren();
+
     chrome.storage.local.get(["events"]).then((result) => {
-        // TODO: Add checkbox functionality later.
-        for (let e of result.events) {
+        result.events.sort((left, right) => Date.parse(left.date) - Date.parse(right.date));
+
+        for (let i = 0; i < result.events.length; i++) {
+            let e = result.events[i];
             let li = document.createElement("li");
             let p = document.createElement("p");
 
             // TODO: Add times in later using that one block algorithm
-            p.innerText = e.title;
+            // NOTE: Haresh if you want to style these tasks then you can literally just write the html directly into this variable value (using like spans and stuff with classes or whatever you frontend wizards do).
+            // NOTE: Technically this probably allows for like code injection and stuff and in a real scenario we would probably handle this but it also kinda doesn't matter because it's a local extension.
+            p.innerHTML = blockTimes(e.times).join(", ") + " " + e.title;
 
             li.appendChild(p);
 
             if (e.completed) {
                 completedTasks.appendChild(li);
+
+                li.onclick = () => {
+                    result.events[i].completed = false;
+                    chrome.storage.local.set({ events: result.events }).then(() => {})
+                    reloadTasks();
+                };
             } else {
+                li.onclick = () => {
+                    result.events[i].completed = true;
+                    chrome.storage.local.set({ events: result.events }).then(() => {})
+                    reloadTasks();
+                };
+
                 todoTasks.appendChild(li);
             }
-
-            console.log(e);
         }
     });
+};
+
+window.onload = () => {
+    reloadTasks();
 };
