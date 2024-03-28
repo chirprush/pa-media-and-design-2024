@@ -99,6 +99,8 @@ checkbox.addEventListener("click", updateToggle)
 
 function updateTime() {
     let presentDate = new Date(Date.now()).toDateString();
+    let presentHour = new Date(Date.now()).getHours();
+    let presentMinute = new Date(Date.now()).getMinutes();
     
     chrome.tabs.query({ "active": true, "lastFocusedWindow": true }, function (activeTab) {
         chrome.storage.local.get({ list: [] }, function (trackedSites) {
@@ -138,6 +140,8 @@ function updateTime() {
                             isTracked = true;
                         }
                     }
+                    
+                    console.log("istracked:" + isTracked);
 
                     chrome.storage.local.get("globalTimeLimit", function (globalTimeLimit) {
                         if (storedObject[presentDate][domain] >= globalTimeLimit.globalTimeLimit && isTracked) {
@@ -156,6 +160,33 @@ function updateTime() {
                             });
                         }
                     });
+
+                    let autoClose = true;
+                    if(autoClose){
+                        if(isTracked){
+                            chrome.storage.local.get(["events"]).then((result) => {
+                                let currentTimeIndex = parseInt((presentHour * 60 + presentMinute)/15);
+                                for(let i = 0; i < result.events.length; i++){
+                                    let e = result.events[i];
+                                    console.log(e);
+                                    // console.log(e.date);
+                                    let inEvent = false;
+                                    if(e.date == presentDate){
+                                        for(let j = 0; j < e.times.length; j++){
+                                            if(e.times[j] == currentTimeIndex){
+                                                inEvent = true;
+                                            }   
+                                        }
+                                    }
+                                    if(inEvent && !e.completed){
+                                        chrome.tabs.query({ "active": true, "currentWindow": true }, function (tabs) {
+                                            chrome.tabs.remove(tabs[0].id);
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
                 };
             });
         });

@@ -432,3 +432,9 @@ input[type=text]:focus {
     stroke-dasharray: 25;
     stroke-dashoffset: 25;
   }
+#ml-feedback {
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
+
+/* Kanban */
