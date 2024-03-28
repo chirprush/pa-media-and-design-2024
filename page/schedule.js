@@ -20,6 +20,17 @@ const daysInMonth = (year, month) => {
 let selectedDateElement = null;
 let selectedDate = null;
 
+let resetCalendar = () => {
+    selectedDateElement = null;
+    selectedDate = null;
+
+    for (let i = 0; i < 42; i++) {
+        let el = document.getElementById("day-slot-" + i);
+
+        el.classList.remove("selected");
+    }
+};
+
 let onDayClick = (day, date) => {
     if (selectedDateElement !== null) {
         selectedDateElement.classList.remove("selected");
@@ -154,6 +165,7 @@ window.onload = () => {
         selectedDateElement = null;
         selectedDate = null;
 
+        resetCalendar();
         onDayClick(selectedDateElement, selectedDate);
 
         currentDate.setMonth(currentDate.getMonth() - 1);
@@ -164,6 +176,7 @@ window.onload = () => {
         selectedDateElement = null;
         selectedDate = null;
 
+        resetCalendar();
         onDayClick(selectedDateElement, selectedDate);
 
         currentDate.setMonth(currentDate.getMonth() + 1);
