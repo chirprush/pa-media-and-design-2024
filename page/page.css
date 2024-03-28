@@ -439,6 +439,8 @@ input[type=text]:focus {
 
 /* Overlay */
 #overlay {
+    text-align: center;
+    font-size: 128px;
     position: fixed;
     display: none;
     width: 100%;

@@ -151,10 +151,7 @@ function updateTime() {
                                 } else {
                                     // popup functions
 
-                                    const div = document.createElement("div");
-                                    div.textContent = "test1";
-                                    document.body.insertBefore(div, document.body.firstChild);
-                                    div.setAttribute("id","overlay");
+
 
                                 }
                                 
@@ -195,6 +192,17 @@ function updateTime() {
 
 var intervalID = setInterval(updateTime, 1000);
 setInterval(checkFocus, 1000);
+
+
+// Experimental
+// setInterval(addPopup, 3000);
+
+function addPopup() {
+    const div = document.createElement("div");
+    div.textContent = "STOP SCROLLING";
+    document.body.insertBefore(div, document.body.firstChild);
+    div.setAttribute("id","overlay");
+}
 
 
 

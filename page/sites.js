@@ -78,6 +78,10 @@ document.getElementById("overlay").onclick = function() {
 }
 
 document.getElementById("overlayButton").onclick = function() {
+    // const div = document.createElement("div");
+    // div.textContent = "STOP SCROLLING";
+    // document.body.insertBefore(div, document.body.firstChild);
+    // div.setAttribute("id","overlay");
     document.getElementById("overlay").style.display = "block";
 }
 
