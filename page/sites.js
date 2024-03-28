@@ -12,7 +12,6 @@ function updateTimes() {
         chrome.storage.local.get(presentDate, function (storedObject) { 
             if(storedObject[presentDate]){
                 let output = "";
-                console.log(storedObject);
                 for (let i = 0; i < trackedSites.list.length; i++) {
                     let ok = false;
                     let site = "";
