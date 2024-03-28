@@ -55,10 +55,9 @@ let reloadTasks = () => {
             let li = document.createElement("li");
             let p = document.createElement("p");
 
-            // TODO: Add times in later using that one block algorithm
             // NOTE: Haresh if you want to style these tasks then you can literally just write the html directly into this variable value (using like spans and stuff with classes or whatever you frontend wizards do).
             // NOTE: Technically this probably allows for like code injection and stuff and in a real scenario we would probably handle this but it also kinda doesn't matter because it's a local extension.
-            p.innerHTML = blockTimes(e.times).join(", ") + " " + e.title;
+            p.innerHTML = e.date + " " + blockTimes(e.times).join(", ") + " " + e.title;
 
             li.appendChild(p);
 
@@ -73,7 +72,8 @@ let reloadTasks = () => {
             } else {
                 li.onclick = () => {
                     result.events[i].completed = true;
-                    chrome.storage.local.set({ events: result.events }).then(() => {})
+                    result.events[i].completedTime = Date.now();
+                    chrome.storage.local.set({ events: result.events }).then(() => {});
                     reloadTasks();
                 };
 

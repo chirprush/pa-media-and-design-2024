@@ -22,7 +22,7 @@ chrome.storage.local.get(["events", "times", "sites", "globalTimeLimit"]).then((
         chrome.storage.local.set({ sites: [] }).then(() => {});
     }
 
-    if (results.globalTimeLimit === undefined) {
+    if (result.globalTimeLimit === undefined) {
         chrome.storage.local.set({ globalTimeLimit: 5 }).then(() => {});
     }
 });

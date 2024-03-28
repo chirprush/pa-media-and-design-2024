@@ -156,4 +156,16 @@ function checkFocus() {
     });
 }
 
+// This feature shall be put on hold until we discuss it further, as it seems
+// rather redundant.
+/*
+chrome.tabs.onActivated.addListener((activeInfo) => {
+    console.log(activeInfo);
+    chrome.tabs.query({}, (tabs) => {
+        let targetTab;
 
+        for (let tab of tabs) {
+        }
+    });
+});
+*/
