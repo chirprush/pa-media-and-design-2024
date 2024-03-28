@@ -168,6 +168,10 @@ let onSliceUpdate = () => {
             }
         }
 
+        if (n == 0) {
+            total = 1;
+            n++;
+        }
         total /= n;
 
         total = Math.max(total, 0.5);
