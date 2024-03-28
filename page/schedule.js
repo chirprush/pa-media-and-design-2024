@@ -118,6 +118,7 @@ let onSlicePress = (slice, sliceId) => {
     isSelectingTime = !(slice.classList.contains("selected"));
     selectStart = sliceId;
 
+    onSliceUpdate();
     if (isSelectingTime) {
         slice.classList.add("selected");
     } else {
@@ -132,6 +133,7 @@ let onSliceRelease = (slice, sliceId) => {
 let onSliceHover = (slice, sliceId) => {
     if (!isMouseDown) { return; }
 
+    onSliceUpdate();
     let diff = selectStart < sliceId ? 1 : -1;
 
     for (let i = selectStart; i != sliceId + diff; i += diff) {
@@ -142,6 +144,38 @@ let onSliceHover = (slice, sliceId) => {
             s.classList.remove("selected");
         }
     }
+};
+
+let onSliceUpdate = () => {
+    let length = 0;
+
+    for (let i = 0; i < 96; i++) {
+        let el = document.getElementById("time-slice-" + i);
+        
+        if (el.classList.contains("selected")) {
+            length += 15;
+        }
+    }
+
+    chrome.storage.local.get("events").then((result) => {
+        let total = 0;
+        let n = 0;
+
+        for (let e of result.events) {
+            if (e.completed) {
+                n++;
+                total += e.ratio;
+            }
+        }
+
+        total /= n;
+
+        total = Math.max(total, 0.5);
+
+        let el = document.getElementById("ml-feedback");
+
+        el.innerText = "Machine Learning Time Prediction: " + Math.floor(total * length) + " minutes";
+    });
 };
 
 window.onmousedown = () => {
