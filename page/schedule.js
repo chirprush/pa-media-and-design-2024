@@ -62,6 +62,7 @@ const displayFromDate = (currentTime) => {
     
     let it = new Date(currentTime);
     
+    // Can't you just change this to it.setDate(1);
     while (it.getDate() != 1) {
         it.setDate(it.getDate() - 1);
     }
@@ -74,7 +75,10 @@ const displayFromDate = (currentTime) => {
             // Give each element a date object?
             // NOTE: Also check to see if there are any events this day and highlight them.
             el.innerText = "" + (i - dayOfWeek + 1);
-            el.onclick = () => onDayClick(el, new Date(it));
+
+            let thisDate = new Date(it);
+
+            el.onclick = () => onDayClick(el, thisDate);
             it.setDate(it.getDate() + 1);
         } else {
             el.innerText = "";

@@ -1,3 +1,19 @@
+let eventStartTime = (e) => {
+    let date = new Date(Date.parse(e.date));
+    
+    let hours = Math.floor(e.times[0] * 4);
+    let minutes = 15 * (e.times[0] - 4 * hours);
+
+    date.setHours(hours);
+    date.setMinutes(minutes);
+
+    return date.valueOf();
+};
+
+let eventExpectedTime = (e) => {
+    return e.times.length * 15;
+};
+
 // Turns the array of time slice indices into human readable time strings
 let blockTimes = (times) => {
     let blocks = [];
@@ -73,6 +89,12 @@ let reloadTasks = () => {
                 li.onclick = () => {
                     result.events[i].completed = true;
                     result.events[i].completedTime = Date.now();
+
+                    // TODO: Perhaps give this a lower bound (or maybe we want to give the average the lower bound perhaps)
+                    result.events[i].ratio = (result.events[i].completedTime - eventStartTime(result.events[i])) / (1000 * 60) / eventExpectedTime(result.events[i]);
+
+                    console.log(result.events[i]);
+
                     chrome.storage.local.set({ events: result.events }).then(() => {});
                     reloadTasks();
                 };
