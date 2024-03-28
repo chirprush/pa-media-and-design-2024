@@ -161,8 +161,7 @@ function updateTime() {
                         }
                     });
 
-                    let autoClose = true;
-                    if(autoClose){
+                    if (autocloseToggle){
                         if(isTracked){
                             chrome.storage.local.get(["events"]).then((result) => {
                                 let currentTimeIndex = parseInt((presentHour * 60 + presentMinute)/15);
