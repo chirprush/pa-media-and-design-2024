@@ -68,7 +68,21 @@ document.getElementById("submit-block").onclick = function() {
 
 document.getElementById("submit-time").onclick = function() {
     var time = parseInt(document.getElementById("blocked-site-time").value);
-
+    var timeLabel = document.getElementById("time-label");
+    timeLabel.innerHTML = "The current time limit for each site is " + time;
     chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
 }
 
+document.getElementById("overlay").onclick = function() {
+    var time = parseInt(document.getElementById("blocked-site-time").value);
+    var timeLabel = document.getElementById("time-label");
+    timeLabel.innerHTML = "The current time limit for each site is " + time;
+    chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
+}
+
+
+
+function savedData() {
+    var timeLabel = document.getElementById("time-label");
+    timeLabel.innerHTML = "The current time limit for each site is " + time;
+}

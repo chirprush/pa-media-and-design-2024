@@ -90,6 +90,13 @@ function getDomain(link) {
     }
 };
 
+var checkbox = document.getElementById("cbx-51");
+var autocloseToggle;
+function updateToggle() {
+    autocloseToggle = checkbox.checked;
+}
+checkbox.addEventListener("click", updateToggle)
+
 function updateTime() {
     let presentDate = new Date(Date.now()).toDateString();
     let presentHour = new Date(Date.now()).getHours();
@@ -139,7 +146,17 @@ function updateTime() {
                     chrome.storage.local.get("globalTimeLimit", function (globalTimeLimit) {
                         if (storedObject[presentDate][domain] >= globalTimeLimit.globalTimeLimit && isTracked) {
                             chrome.tabs.query({ "active": true, "currentWindow": true }, function (tabs) {
-                                chrome.tabs.remove(tabs[0].id);
+                                if (autocloseToggle) {
+                                    chrome.tabs.remove(tabs[0].id);
+                                } else {
+                                    // popup functions
+
+                                    const div = document.createElement("div");
+                                    div.textContent = "test1";
+                                    document.body.insertBefore(p, document.body.firstChild);
+
+                                }
+                                
                             });
                         }
                     });
@@ -178,6 +195,8 @@ function updateTime() {
 
 var intervalID = setInterval(updateTime, 1000);
 setInterval(checkFocus, 1000);
+
+
 
 function checkFocus() {
     chrome.windows.getCurrent(function (window) {
