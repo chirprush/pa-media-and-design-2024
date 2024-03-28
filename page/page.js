@@ -94,57 +94,65 @@ function updateTime() {
     let presentDate = new Date(Date.now()).toDateString();
     
     chrome.tabs.query({ "active": true, "lastFocusedWindow": true }, function (activeTab) {
-        let domain = getDomain(activeTab);
-        if (isValidURL(domain)) {
-            let currentTime = 0;
+        chrome.storage.local.get({ list: [] }, function (trackedSites) {
             chrome.storage.local.get(presentDate, function (storedObject) {
-                // console.log(storedObject);
-                if (storedObject[presentDate]) {
-                    if (storedObject[presentDate][domain]) {
-                        currentTime = storedObject[presentDate][domain] + 1;
-                        storedObject[presentDate][domain] = currentTime;
-                        chrome.storage.local.set(storedObject, function () {
-                            console.log(domain + " at " + storedObject[presentDate][domain]);
-                        });
-
-                        chrome.storage.local.get("globalTimeLimit", function (globalTimeLimit) {
-                            if (storedObject[presentDate][domain] >= globalTimeLimit.globalTimeLimit){
-                                chrome.tabs.query({"active": true, "currentWindow": true}, function (tabs) {
-                                    chrome.tabs.remove(tabs[0].id);
-                                }); 
-                            }
-                        });
-                        
+                let domain = getDomain(activeTab);
+                if (isValidURL(domain)) {
+                    let currentTime = 0;
+                    // console.log(storedObject);
+                    if (storedObject[presentDate]) {
+                        if (storedObject[presentDate][domain]) {
+                            currentTime = storedObject[presentDate][domain] + 1;
+                            storedObject[presentDate][domain] = currentTime;
+                            chrome.storage.local.set(storedObject, function () {
+                                console.log(domain + " at " + storedObject[presentDate][domain]);
+                            });
+                        }
+                        else {
+                            currentTime++;
+                            storedObject[presentDate][domain] = currentTime;
+                            chrome.storage.local.set(storedObject, function () {
+                                console.log(domain + " at " + storedObject[presentDate][domain]);
+                            });
+                        }
                     }
                     else {
                         currentTime++;
+                        storedObject[presentDate] = {};
                         storedObject[presentDate][domain] = currentTime;
                         chrome.storage.local.set(storedObject, function () {
                             console.log(domain + " at " + storedObject[presentDate][domain]);
-                        });
+                        })
                     }
-                }
-                else {
-                    currentTime++;
-                    storedObject[presentDate] = {};
-                    storedObject[presentDate][domain] = currentTime;
-                    chrome.storage.local.set(storedObject, function () {
-                        console.log(domain + " at " + storedObject[presentDate][domain]);
-                    })
-                }
+
+                    let isTracked = false;
+                    for (let i = 0; i < trackedSites.list.length; i++) {
+                        if (domain.includes(trackedSites.list[i])) {
+                            isTracked = true;
+                        }
+                    }
+
+                    chrome.storage.local.get("globalTimeLimit", function (globalTimeLimit) {
+                        if (storedObject[presentDate][domain] >= globalTimeLimit.globalTimeLimit && isTracked) {
+                            chrome.tabs.query({ "active": true, "currentWindow": true }, function (tabs) {
+                                chrome.tabs.remove(tabs[0].id);
+                            });
+                        }
+                    });
+                };
             });
-        }
+        });
     });
 };
 
-var intervalID = setInterval(updateTime, 100);
-setInterval(checkFocus, 100);
+var intervalID = setInterval(updateTime, 1000);
+setInterval(checkFocus, 1000);
 
 function checkFocus() {
     chrome.windows.getCurrent(function (window) {
         if (window.focused) {
             if (!intervalID) {
-                intervalID = setInterval(updateTime, 100);
+                intervalID = setInterval(updateTime, 1000);
             }
         }
         else {
