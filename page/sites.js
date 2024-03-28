@@ -74,12 +74,12 @@ document.getElementById("submit-time").onclick = function() {
 }
 
 document.getElementById("overlay").onclick = function() {
-    var time = parseInt(document.getElementById("blocked-site-time").value);
-    var timeLabel = document.getElementById("time-label");
-    timeLabel.innerHTML = "The current time limit for each site is " + time;
-    chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
+    document.getElementById("overlay").style.display = "none";
 }
 
+document.getElementById("overlayButton").onclick = function() {
+    document.getElementById("overlay").style.display = "block";
+}
 
 
 function savedData() {

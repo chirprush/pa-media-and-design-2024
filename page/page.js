@@ -153,7 +153,8 @@ function updateTime() {
 
                                     const div = document.createElement("div");
                                     div.textContent = "test1";
-                                    document.body.insertBefore(p, document.body.firstChild);
+                                    document.body.insertBefore(div, document.body.firstChild);
+                                    div.setAttribute("id","overlay");
 
                                 }
                                 
