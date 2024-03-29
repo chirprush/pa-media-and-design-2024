@@ -68,7 +68,7 @@ chrome.runtime.onMessage.addListener((message) => {
     completedTasks.style.fontSize = "20px";
 
     const button = document.createElement("button");
-    button.textContent = "Add More Time";
+    button.textContent = "Reset Website Time";
     div.appendChild(button)
 
     todoTasks.id = "todo-tasks";
@@ -265,6 +265,8 @@ chrome.runtime.onMessage.addListener((message) => {
         // Remove overlay
         let el = document.getElementById("number-one-debater-overlay");
         el.remove();
+
+        
 
         // Reset the time for the website
         let currentDate = new Date().toDateString();
