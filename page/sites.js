@@ -5,8 +5,9 @@ function updateTimes() {
 
     chrome.storage.local.get({ list: [] }, function (trackedSites) {
         // console.log(trackedSites.list);
-        let sites = "";
+        // let sites = "";
         if (needToUpdate) {
+            document.getElementById("blocklist").replaceChildren();
             for (let i = 0; i < trackedSites.list.length; i++) {
                 let siteBlock = document.createElement("div");
                 siteBlock.classList.add("website");
@@ -14,7 +15,7 @@ function updateTimes() {
                 siteBlock.textContent = trackedSites.list[i];
                 const list = document.getElementById("blocklist");
                 list.appendChild(siteBlock);
-                console.log("site added")
+                console.log("site added");
                 //old
                 // sites += trackedSites.list[i] + "<br>";
                 needToUpdate = false;
@@ -48,14 +49,15 @@ function updateTimes() {
 
     for (let i=0; i < websiteCollection.length; i++) {
         websiteCollection[i].onclick = function(){
-            console.log("hi")
+            console.log(websiteCollection[i].innerHTML);
             chrome.storage.local.get({list:[]}, function (trackedSites) {
 
                 // FIX THIS FUNCTION
 
-                const index = trackedSites.list.indexOf(websiteCollection[i].innerHTML);
-                delete trackedSites.list[i]
-                console.log("found");
+                let index = trackedSites.list.indexOf(websiteCollection[i].innerHTML);
+                trackedSites.list.splice(index,1);
+                chrome.storage.local.set({ list: trackedSites.list }, function () { console.log("site removed"); });
+                
                 // if (index > -1) { // only splice array when item is found
                 //     console.log("found");
                 //     delete trackedSites.list[i]
@@ -88,7 +90,9 @@ function checkFocus() {
 
 document.getElementById("submit-block").onclick = function() {
     var blockedWebsite = document.getElementById("blocked-site").value;
+
     chrome.storage.local.get({list:[]}, function (trackedSites) {
+        console.log(trackedSites.list);
         let ok = false;
         for(let i = 0; i < trackedSites.list.length; i++){
             if(blockedWebsite.includes(trackedSites.list[i]) || trackedSites.list[i].includes(blockedWebsite)){
@@ -99,9 +103,13 @@ document.getElementById("submit-block").onclick = function() {
             trackedSites.list.push(blockedWebsite);
             chrome.storage.local.set({ list: trackedSites.list }, function () { console.log("site added"); });
             needToUpdate = true;
-
         }
     });
+    document.getElementById("blocked-site").value = "";
+<<<<<<< HEAD
+    
+=======
+>>>>>>> b8b34a04286f7c5d67d588bd8070fe46264576d9
 }
 
 document.getElementById("submit-time").onclick = function() {
@@ -109,6 +117,11 @@ document.getElementById("submit-time").onclick = function() {
     var timeLabel = document.getElementById("time-label");
     timeLabel.innerHTML = "The current time limit for each site is " + time + " seconds";
     chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
+<<<<<<< HEAD
+
+=======
+>>>>>>> b8b34a04286f7c5d67d588bd8070fe46264576d9
+    document.getElementById("blocked-site-time").value = "";
 }
 
 document.getElementById("overlay").onclick = function() {
@@ -134,6 +147,7 @@ function savedData() {
     let timeLabel = document.getElementById("time-label");
     timeLabel.innerHTML = "The current time limit for each site is " + time;
 }
+
 
 
 
