@@ -90,7 +90,6 @@ let reloadTasks = () => {
                     result.events[i].completed = true;
                     result.events[i].completedTime = Date.now();
 
-                    // TODO: Perhaps give this a lower bound (or maybe we want to give the average the lower bound perhaps)
                     result.events[i].ratio = (result.events[i].completedTime - eventStartTime(result.events[i])) / (1000 * 60) / eventExpectedTime(result.events[i]);
 
                     console.log(result.events[i]);

@@ -27,8 +27,6 @@ chrome.storage.local.get(["events", "times", "sites", "globalTimeLimit"]).then((
     }
 });
 
-console.log("Content script updated >:3");
-
 chrome.runtime.onMessage.addListener((message) => {
     let preexistingOverlay = document.getElementById("number-one-debater-overlay");
 
@@ -59,9 +57,35 @@ chrome.runtime.onMessage.addListener((message) => {
     div.style.cursor = "pointer";
     div.style.color = "#fff";
 
-    const br = document.createElement("br");
-    div.appendChild(br)
+    div.setAttribute("id", "number-one-debater-overlay");
 
+    let todoTasks = document.createElement("ul");
+    let todoTasksHeader = document.createElement("h2");
+    let completedTasks = document.createElement("ul");
+    let completedTasksHeader = document.createElement("h2");
+
+    todoTasks.style.fontSize = "20px";
+    completedTasks.style.fontSize = "20px";
+
+    const button = document.createElement("button");
+    button.textContent = "Add More Time";
+    div.appendChild(button)
+
+    todoTasks.id = "todo-tasks";
+    completedTasks.id = "completed-tasks";
+
+    todoTasksHeader.innerText = "Todo";
+    completedTasksHeader.innerText = "Completed";
+
+    todoTasksHeader.style.fontSize = "50px";
+    completedTasksHeader.style.fontSize = "50px";
+
+    div.appendChild(todoTasksHeader)
+    div.appendChild(todoTasks);
+    div.appendChild(completedTasksHeader)
+    div.appendChild(completedTasks);
+
+    /*
     const input = document.createElement("input");
     input.textContent = "time in seconds";
     div.appendChild(input)
@@ -81,13 +105,7 @@ chrome.runtime.onMessage.addListener((message) => {
     padding: 6px 10px 6px 20px;
     transition: width 0.4s ease-in-out;
     `);
-
-    const br2 = document.createElement("br");
-    div.appendChild(br2)
-
-    const button = document.createElement("button");
-    button.textContent = "Add More Time";
-    div.appendChild(button)
+    */
 
     button.setAttribute("id","overlayButton");
 
@@ -209,8 +227,6 @@ chrome.runtime.onMessage.addListener((message) => {
                 let li = document.createElement("li");
                 let p = document.createElement("p");
     
-                // NOTE: Haresh if you want to style these tasks then you can literally just write the html directly into this variable value (using like spans and stuff with classes or whatever you frontend wizards do).
-                // NOTE: Technically this probably allows for like code injection and stuff and in a real scenario we would probably handle this but it also kinda doesn't matter because it's a local extension.
                 p.innerHTML = e.date + " " + blockTimes(e.times).join(", ") + " " + e.title;
     
                 li.appendChild(p);
@@ -242,16 +258,26 @@ chrome.runtime.onMessage.addListener((message) => {
             }
         });
     };
-    
-    window.onload = () => {
-        reloadTasks();
-    };
 
+    reloadTasks();
     
+    button.onclick = () => {
+        // Remove overlay
+        let el = document.getElementById("number-one-debater-overlay");
+        el.remove();
 
-    // button.onclick() = function () {
-    //     console.log("button clicked: " + input.value);
-    // }
+        // Reset the time for the website
+        let currentDate = new Date().toDateString();
+        chrome.storage.local.get(currentDate, (result) => {
+            for (let name of Object.keys(result[currentDate])) {
+                if (window.location.href.includes(name)) {
+                    result[currentDate][name] = 0;
+                }
+            }
+
+            chrome.storage.local.set(result);
+        });
+    }
 
     // This is critical to the functioning of the program (in our hearts).
     return false;
