@@ -38,7 +38,7 @@ let blockTimes = (times) => {
     let toReadable = (t) => {
         let hour = Math.floor(t / 4);
         let minute = "" + 15 * (t - 4 * hour);
-        let pm = hour >= 12;
+        let pm = t >= 48 && t < 96;
         
         hour = hour % 12;
         hour = hour === 0 ? 12 : hour;

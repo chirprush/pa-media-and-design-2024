@@ -174,7 +174,7 @@ let onSliceUpdate = () => {
         }
         total /= n;
 
-        total = Math.max(total, 0.5);
+        total = Math.min(Math.max(total, 0.5), 2.0);
 
         let el = document.getElementById("ml-feedback");
 
@@ -229,6 +229,8 @@ window.onload = () => {
         let taskTitleEl = document.getElementById("task-title");
         let taskTitle = document.getElementById("task-title").value.trim();
 
+        let isProtected = document.getElementById("cbx-46").checked;
+
         if (taskTitle.length === 0) {
             alert("Enter a valid title for your task");
             return;
@@ -259,9 +261,9 @@ window.onload = () => {
 
         chrome.storage.local.get(["events"]).then((result) => {
             // Just to be safe
-            events = result.events || [];
+            let events = result.events || [];
 
-            events.push({ title: taskTitle, date: selectedDate.toDateString(), times: times, completed: false });
+            events.push({ title: taskTitle, date: selectedDate.toDateString(), times: times, completed: false, isProtected: isProtected });
 
             chrome.storage.local.set({ events: events }).then((result) => {});
         });

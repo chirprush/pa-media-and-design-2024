@@ -62,6 +62,26 @@ starts or something.
 //     console.log("created tracked sites list");
 // }});
 
+// Default initializes the key values that we need
+chrome.storage.local.get(["events", "times", "sites", "globalTimeLimit"]).then((result) => {
+    if (result.events === undefined) {
+        chrome.storage.local.set({ events: [] }).then(() => {});
+    }
+
+    if (result.times === undefined) {
+        chrome.storage.local.set({ times: [] }).then(() => {});
+    }
+
+    if (result.sites === undefined) {
+        chrome.storage.local.set({ sites: [] }).then(() => {});
+    }
+
+    if (result.globalTimeLimit === undefined) {
+        chrome.storage.local.set({ globalTimeLimit: 20 }).then(() => {});
+    }
+});
+
+
 function isValidURL(givenURL) {
     if (givenURL) {
         if (givenURL.includes(".")) {
@@ -154,8 +174,6 @@ function updateTime() {
                                     console.log("Adding overlay");
                                     console.log(tabs[0].id);
                                     addOverlay(tabs[0].id);
-
-
                                 }
                                 
                             });

@@ -8,25 +8,6 @@
 // NOTE: We should probably also test if the url is in one of the website urls
 // because this script will run on every website visited
 
-// Default initializes the key values that we need
-chrome.storage.local.get(["events", "times", "sites", "globalTimeLimit"]).then((result) => {
-    if (result.events === undefined) {
-        chrome.storage.local.set({ events: [] }).then(() => {});
-    }
-
-    if (result.times === undefined) {
-        chrome.storage.local.set({ times: [] }).then(() => {});
-    }
-
-    if (result.sites === undefined) {
-        chrome.storage.local.set({ sites: [] }).then(() => {});
-    }
-
-    if (result.globalTimeLimit === undefined) {
-        chrome.storage.local.set({ globalTimeLimit: 300 }).then(() => {});
-    }
-});
-
 chrome.runtime.onMessage.addListener((message) => {
     let preexistingOverlay = document.getElementById("number-one-debater-overlay");
 
@@ -194,7 +175,7 @@ chrome.runtime.onMessage.addListener((message) => {
         let toReadable = (t) => {
             let hour = Math.floor(t / 4);
             let minute = "" + 15 * (t - 4 * hour);
-            let pm = hour >= 12;
+            let pm = t >= 48 && t < 96;
             
             hour = hour % 12;
             hour = hour === 0 ? 12 : hour;
@@ -266,7 +247,26 @@ chrome.runtime.onMessage.addListener((message) => {
         let el = document.getElementById("number-one-debater-overlay");
         el.remove();
 
-        
+        chrome.storage.local.get("events", (result) => {
+            let currentDate = new Date().toDateString();
+            let currentIndex = 4 * (new Date()).getHours() + Math.floor((new Date()).getMinutes() / 15);
+            
+            // Auto pushback
+            for (let i = 0; i < result.events.length; i++) {
+                let e = result.events[i];
+                if (!e.isProtected && !e.completed && e.date === currentDate && (new Set(e.times)).has(currentIndex)) {
+                    for (let j = e.times.length - 1; j >= 0; j--) {
+                        result.events[i].times[j] += 1 + currentIndex - e.times[0];
+
+                        if (result.events[i].times[j] >= 96) {
+                            result.events[i].times.splice(j, 1);
+                        }
+                    }
+                }
+            }
+
+            chrome.storage.local.set(result);
+        });
 
         // Reset the time for the website
         let currentDate = new Date().toDateString();
