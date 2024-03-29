@@ -147,13 +147,13 @@ function updateTime() {
                         if (storedObject[presentDate][domain] >= globalTimeLimit.globalTimeLimit && isTracked) {
                             chrome.tabs.query({ "active": true, "currentWindow": true }, function (tabs) {
                                 if (autocloseToggle) {
-                                    // chrome.tabs.remove(tabs[0].id);
+                                    chrome.tabs.remove(tabs[0].id);
+                                    
+                                } else {
+                                    // popup functions
                                     console.log("Adding overlay");
                                     console.log(tabs[0].id);
                                     addOverlay(tabs[0].id);
-                                } else {
-                                    // popup functions
-
 
 
                                 }
