@@ -1,13 +1,27 @@
+var needToUpdate = true;
+
 function updateTimes() {
     let presentDate = new Date(Date.now()).toDateString();
 
     chrome.storage.local.get({ list: [] }, function (trackedSites) {
         // console.log(trackedSites.list);
         let sites = "";
-        for (let i = 0; i < trackedSites.list.length; i++) {
-            sites += trackedSites.list[i] + "<br>";
+        if (needToUpdate) {
+            for (let i = 0; i < trackedSites.list.length; i++) {
+                let siteBlock = document.createElement("div");
+                siteBlock.classList.add("website");
+
+                siteBlock.textContent = trackedSites.list[i];
+                const list = document.getElementById("blocklist");
+                list.appendChild(siteBlock);
+                console.log("site added")
+                //old
+                // sites += trackedSites.list[i] + "<br>";
+                needToUpdate = false;
+            }
         }
-        document.getElementById("blocklist").innerHTML = sites;
+        
+        // document.getElementById("blocklist").innerHTML = sites;
 
         chrome.storage.local.get(presentDate, function (storedObject) { 
             if(storedObject[presentDate]){
@@ -29,6 +43,28 @@ function updateTimes() {
             }
         });
     });
+
+    var websiteCollection = document.getElementsByClassName("website");
+
+    for (let i=0; i < websiteCollection.length; i++) {
+        websiteCollection[i].onclick = function(){
+            console.log("hi")
+            chrome.storage.local.get({list:[]}, function (trackedSites) {
+
+                // FIX THIS FUNCTION
+
+                const index = trackedSites.list.indexOf(websiteCollection[i].innerHTML);
+                delete trackedSites.list[i]
+                console.log("found");
+                // if (index > -1) { // only splice array when item is found
+                //     console.log("found");
+                //     delete trackedSites.list[i]
+                //     // trackedSites.list[i].splice(index, 1); // 2nd parameter means remove one item only
+                // }
+                needToUpdate = true;
+            });
+        }
+    };
 }
 
 var intervalID = setInterval(updateTimes, 1000);
@@ -62,6 +98,8 @@ document.getElementById("submit-block").onclick = function() {
         if(isValidURL(blockedWebsite) && !ok){
             trackedSites.list.push(blockedWebsite);
             chrome.storage.local.set({ list: trackedSites.list }, function () { console.log("site added"); });
+            needToUpdate = true;
+
         }
     });
 }
@@ -96,3 +134,6 @@ function savedData() {
     let timeLabel = document.getElementById("time-label");
     timeLabel.innerHTML = "The current time limit for each site is " + time;
 }
+
+
+

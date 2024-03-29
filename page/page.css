@@ -437,6 +437,12 @@ input[type=text]:focus {
     padding-bottom: 20px;
 }
 
+/* Websites */
+.website:hover {
+  text-decoration: line-through;
+}
+
+
 /* Overlay */
 #overlay {
     text-align: center;
