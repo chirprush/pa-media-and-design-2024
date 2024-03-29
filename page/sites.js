@@ -69,7 +69,7 @@ document.getElementById("submit-block").onclick = function() {
 document.getElementById("submit-time").onclick = function() {
     var time = parseInt(document.getElementById("blocked-site-time").value);
     var timeLabel = document.getElementById("time-label");
-    timeLabel.innerHTML = "The current time limit for each site is " + time;
+    timeLabel.innerHTML = "The current time limit for each site is " + time + " seconds";
     chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
 }
 
@@ -85,8 +85,14 @@ document.getElementById("overlayButton").onclick = function() {
     document.getElementById("overlay").style.display = "block";
 }
 
+window.onload = () => {
+    chrome.storage.local.get("globalTimeLimit", (result) => {
+        let timeLabel = document.getElementById("time-label");
+        timeLabel.innerHTML = "The current time limit for each site is " + result.globalTimeLimit + " seconds";
+    });
+}
 
 function savedData() {
-    var timeLabel = document.getElementById("time-label");
+    let timeLabel = document.getElementById("time-label");
     timeLabel.innerHTML = "The current time limit for each site is " + time;
 }
