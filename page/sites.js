@@ -88,6 +88,7 @@ function checkFocus() {
 
 document.getElementById("submit-block").onclick = function() {
     var blockedWebsite = document.getElementById("blocked-site").value;
+
     chrome.storage.local.get({list:[]}, function (trackedSites) {
         let ok = false;
         for(let i = 0; i < trackedSites.list.length; i++){
@@ -102,6 +103,8 @@ document.getElementById("submit-block").onclick = function() {
 
         }
     });
+    document.getElementById("blocked-site").value = "";
+    
 }
 
 document.getElementById("submit-time").onclick = function() {
@@ -109,6 +112,8 @@ document.getElementById("submit-time").onclick = function() {
     var timeLabel = document.getElementById("time-label");
     timeLabel.innerHTML = "The current time limit for each site is " + time + " seconds";
     chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
+
+    document.getElementById("blocked-site-time").value = "";
 }
 
 document.getElementById("overlay").onclick = function() {
@@ -134,6 +139,7 @@ function savedData() {
     let timeLabel = document.getElementById("time-label");
     timeLabel.innerHTML = "The current time limit for each site is " + time;
 }
+
 
 
 
