@@ -147,7 +147,10 @@ function updateTime() {
                         if (storedObject[presentDate][domain] >= globalTimeLimit.globalTimeLimit && isTracked) {
                             chrome.tabs.query({ "active": true, "currentWindow": true }, function (tabs) {
                                 if (autocloseToggle) {
-                                    chrome.tabs.remove(tabs[0].id);
+                                    // chrome.tabs.remove(tabs[0].id);
+                                    console.log("Adding overlay");
+                                    console.log(tabs[0].id);
+                                    addOverlay(tabs[0].id);
                                 } else {
                                     // popup functions
 
@@ -197,14 +200,21 @@ setInterval(checkFocus, 1000);
 // Experimental
 // setInterval(addPopup, 3000);
 
+/*
 function addPopup() {
     const div = document.createElement("div");
     div.textContent = "STOP SCROLLING";
     document.body.insertBefore(div, document.body.firstChild);
     div.setAttribute("id","overlay");
 }
+*/
 
-
+function addOverlay(tabId) {
+    chrome.tabs.sendMessage(
+        tabId,
+        "Send overlay"
+    );
+}
 
 function checkFocus() {
     chrome.windows.getCurrent(function (window) {
