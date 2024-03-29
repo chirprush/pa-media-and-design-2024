@@ -106,10 +106,6 @@ document.getElementById("submit-block").onclick = function() {
         }
     });
     document.getElementById("blocked-site").value = "";
-<<<<<<< HEAD
-    
-=======
->>>>>>> b8b34a04286f7c5d67d588bd8070fe46264576d9
 }
 
 document.getElementById("submit-time").onclick = function() {
@@ -117,10 +113,6 @@ document.getElementById("submit-time").onclick = function() {
     var timeLabel = document.getElementById("time-label");
     timeLabel.innerHTML = "The current time limit for each site is " + time + " seconds";
     chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
-<<<<<<< HEAD
-
-=======
->>>>>>> b8b34a04286f7c5d67d588bd8070fe46264576d9
     document.getElementById("blocked-site-time").value = "";
 }
 
