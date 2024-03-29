@@ -1,11 +1,9 @@
 html {
-    /* NOTE: We will change this later for styling but this is for me to know that
-     * the styling is working */
-    background-color: #282c34;
+    background-color: #181a1b;
     color: white;
 
     min-width: 400px;
-    min-height: 600px;
+    min-height: 175px;
 }
 
 body {
@@ -16,4 +14,28 @@ body {
 /* Hides scroll bar because it doesn't look very nice */
 body::-webkit-scrollbar {
     display: none;
+}
+
+h1 {
+    color: #1191fc;
+}
+
+#options-link {
+    width: 80%;
+    margin: auto;
+
+    /* background-color: #232729; */
+    border-radius: 5px;
+
+    text-align: center;
+    font-size: 25px;
+
+    color: #fbfbfb;
+    font-weight: bold;
+
+    transition: background 0.2s;
+}
+
+#options-link:hover {
+    background: #3b4045;
 }

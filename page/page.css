@@ -437,6 +437,12 @@ input[type=text]:focus {
     padding-bottom: 20px;
 }
 
+/* Websites */
+.website:hover {
+  text-decoration: line-through;
+}
+
+
 /* Overlay */
 #overlay {
     text-align: center;
@@ -452,7 +458,7 @@ input[type=text]:focus {
     background-color: rgba(0,0,0,0.5);
     z-index: 2;
     cursor: pointer;
-  }
+}
 
   /* Checkbox from https://getcssscan.com/css-checkboxes-examples */
   
