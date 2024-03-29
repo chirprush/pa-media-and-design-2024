@@ -40,6 +40,13 @@ chrome.runtime.onMessage.addListener((message) => {
 
     div.setAttribute("id", "number-one-debater-overlay");
 
+
+    let timeDisplay = document.createElement("h2");
+    timeDisplay.innerText = "It is " + (new Date()).toLocaleTimeString();
+    timeDisplay.style.fontSize = "50px";
+
+    div.appendChild(timeDisplay);
+
     let todoTasks = document.createElement("ul");
     let todoTasksHeader = document.createElement("h2");
     let completedTasks = document.createElement("ul");
@@ -134,7 +141,6 @@ chrome.runtime.onMessage.addListener((message) => {
     background-image: linear-gradient(92.83deg, #1191FC 0, #f443fd 100%);
     `);
 
-    // tasks -- NOT WORKING
     let eventStartTime = (e) => {
         let date = new Date(Date.parse(e.date));
         
@@ -146,11 +152,11 @@ chrome.runtime.onMessage.addListener((message) => {
     
         return date.valueOf();
     };
-    
+
     let eventExpectedTime = (e) => {
         return e.times.length * 15;
     };
-    
+
     // Turns the array of time slice indices into human readable time strings
     let blockTimes = (times) => {
         let blocks = [];
@@ -169,19 +175,19 @@ chrome.runtime.onMessage.addListener((message) => {
                 blocks.push([times[i], times[i]]);
             }
         }
-    
-        let readableTimes = [];
-    
+
         let toReadable = (t) => {
             let hour = Math.floor(t / 4);
             let minute = "" + 15 * (t - 4 * hour);
             let pm = t >= 48 && t < 96;
-            
+
             hour = hour % 12;
             hour = hour === 0 ? 12 : hour;
-    
+
             return hour + ":" + minute.padStart(2, "0") + " " + (pm ? "PM" : "AM");
         };
+
+        let readableTimes = [];
     
         for (let i = 0; i < blocks.length; i++) {
             let begin = blocks[i][0];

@@ -129,6 +129,17 @@ document.getElementById("overlayButton").onclick = function() {
 }
 
 window.onload = () => {
+
+    let checkbox = document.getElementById("cbx-51");
+
+    chrome.storage.local.get("autocloseToggle", (result) => {
+        checkbox.checked = result.autocloseToggle;
+    });
+
+    checkbox.addEventListener("click", () => {
+        chrome.storage.local.set({ autocloseToggle: checkbox.checked });
+    });
+
     chrome.storage.local.get("globalTimeLimit", (result) => {
         let timeLabel = document.getElementById("time-label");
         timeLabel.innerHTML = "The current time limit for each site is " + result.globalTimeLimit + " seconds";
