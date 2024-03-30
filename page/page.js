@@ -62,6 +62,30 @@ starts or something.
 //     console.log("created tracked sites list");
 // }});
 
+// Default initializes the key values that we need
+chrome.storage.local.get(["events", "times", "sites", "globalTimeLimit", "autocloseToggle"]).then((result) => {
+    if (result.events === undefined) {
+        chrome.storage.local.set({ events: [] }).then(() => {});
+    }
+
+    if (result.times === undefined) {
+        chrome.storage.local.set({ times: [] }).then(() => {});
+    }
+
+    if (result.sites === undefined) {
+        chrome.storage.local.set({ sites: [] }).then(() => {});
+    }
+
+    if (result.globalTimeLimit === undefined) {
+        chrome.storage.local.set({ globalTimeLimit: 20 }).then(() => {});
+    }
+
+    if (result.autocloseToggle === undefined) {
+        chrome.storage.local.set({ autocloseToggle: false }).then(() => {});
+    }
+});
+
+
 function isValidURL(givenURL) {
     if (givenURL) {
         if (givenURL.includes(".")) {
@@ -90,13 +114,6 @@ function getDomain(link) {
     }
 };
 
-var checkbox = document.getElementById("cbx-51");
-var autocloseToggle;
-function updateToggle() {
-    autocloseToggle = checkbox.checked;
-}
-checkbox.addEventListener("click", updateToggle);
-
 function updateTime() {
     let presentDate = new Date(Date.now()).toDateString();
     let presentHour = new Date(Date.now()).getHours();
@@ -104,13 +121,15 @@ function updateTime() {
     
     chrome.tabs.query({ "active": true, "lastFocusedWindow": true }, function (activeTab) {
         chrome.storage.local.get({ list: [] }, function (trackedSites) {
-            chrome.storage.local.get(presentDate, function (storedObject) {
+            chrome.storage.local.get([presentDate, "autocloseToggle"], function (storedObject) {
+                let autocloseToggle = storedObject.autocloseToggle;
                 let domain = getDomain(activeTab);
                 if (isValidURL(domain)) {
                     let currentTime = 0;
                     // console.log(storedObject);
                     if (storedObject[presentDate]) {
                         if (storedObject[presentDate][domain]) {
+                            console.log("Updated time for: " + domain + " " + currentTime);
                             currentTime = storedObject[presentDate][domain] + 1;
                             storedObject[presentDate][domain] = currentTime;
                             chrome.storage.local.set(storedObject, function () {
@@ -154,8 +173,6 @@ function updateTime() {
                                     console.log("Adding overlay");
                                     console.log(tabs[0].id);
                                     addOverlay(tabs[0].id);
-
-
                                 }
                                 
                             });
@@ -187,6 +204,7 @@ function updateTime() {
                         }
                     }
 
+                    /*
                     chrome.storage.local.get("globalTimeLimit", function (globalTimeLimit) {
                         if (storedObject[presentDate][domain] >= globalTimeLimit.globalTimeLimit && isTracked) {
                             chrome.tabs.query({ "active": true, "currentWindow": true }, function (tabs) {
@@ -197,6 +215,7 @@ function updateTime() {
                             });
                         }
                     });
+                    */
                 };
             });
         });

@@ -8,25 +8,6 @@
 // NOTE: We should probably also test if the url is in one of the website urls
 // because this script will run on every website visited
 
-// Default initializes the key values that we need
-chrome.storage.local.get(["events", "times", "sites", "globalTimeLimit"]).then((result) => {
-    if (result.events === undefined) {
-        chrome.storage.local.set({ events: [] }).then(() => {});
-    }
-
-    if (result.times === undefined) {
-        chrome.storage.local.set({ times: [] }).then(() => {});
-    }
-
-    if (result.sites === undefined) {
-        chrome.storage.local.set({ sites: [] }).then(() => {});
-    }
-
-    if (result.globalTimeLimit === undefined) {
-        chrome.storage.local.set({ globalTimeLimit: 300 }).then(() => {});
-    }
-});
-
 chrome.runtime.onMessage.addListener((message) => {
     let preexistingOverlay = document.getElementById("number-one-debater-overlay");
 
@@ -58,6 +39,13 @@ chrome.runtime.onMessage.addListener((message) => {
     div.style.color = "#fff";
 
     div.setAttribute("id", "number-one-debater-overlay");
+
+
+    let timeDisplay = document.createElement("h2");
+    timeDisplay.innerText = "It is " + (new Date()).toLocaleTimeString();
+    timeDisplay.style.fontSize = "50px";
+
+    div.appendChild(timeDisplay);
 
     let todoTasks = document.createElement("ul");
     let todoTasksHeader = document.createElement("h2");
@@ -153,7 +141,6 @@ chrome.runtime.onMessage.addListener((message) => {
     background-image: linear-gradient(92.83deg, #1191FC 0, #f443fd 100%);
     `);
 
-    // tasks -- NOT WORKING
     let eventStartTime = (e) => {
         let date = new Date(Date.parse(e.date));
         
@@ -165,11 +152,11 @@ chrome.runtime.onMessage.addListener((message) => {
     
         return date.valueOf();
     };
-    
+
     let eventExpectedTime = (e) => {
         return e.times.length * 15;
     };
-    
+
     // Turns the array of time slice indices into human readable time strings
     let blockTimes = (times) => {
         let blocks = [];
@@ -188,19 +175,19 @@ chrome.runtime.onMessage.addListener((message) => {
                 blocks.push([times[i], times[i]]);
             }
         }
-    
-        let readableTimes = [];
-    
+
         let toReadable = (t) => {
             let hour = Math.floor(t / 4);
             let minute = "" + 15 * (t - 4 * hour);
-            let pm = hour >= 12;
-            
+            let pm = t >= 48 && t < 96;
+
             hour = hour % 12;
             hour = hour === 0 ? 12 : hour;
-    
+
             return hour + ":" + minute.padStart(2, "0") + " " + (pm ? "PM" : "AM");
         };
+
+        let readableTimes = [];
     
         for (let i = 0; i < blocks.length; i++) {
             let begin = blocks[i][0];
@@ -266,7 +253,26 @@ chrome.runtime.onMessage.addListener((message) => {
         let el = document.getElementById("number-one-debater-overlay");
         el.remove();
 
-        
+        chrome.storage.local.get("events", (result) => {
+            let currentDate = new Date().toDateString();
+            let currentIndex = 4 * (new Date()).getHours() + Math.floor((new Date()).getMinutes() / 15);
+            
+            // Auto pushback
+            for (let i = 0; i < result.events.length; i++) {
+                let e = result.events[i];
+                if (!e.isProtected && !e.completed && e.date === currentDate && (new Set(e.times)).has(currentIndex)) {
+                    for (let j = e.times.length - 1; j >= 0; j--) {
+                        result.events[i].times[j] += 1 + currentIndex - e.times[0];
+
+                        if (result.events[i].times[j] >= 96) {
+                            result.events[i].times.splice(j, 1);
+                        }
+                    }
+                }
+            }
+
+            chrome.storage.local.set(result);
+        });
 
         // Reset the time for the website
         let currentDate = new Date().toDateString();
