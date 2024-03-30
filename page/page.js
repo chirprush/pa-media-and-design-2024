@@ -184,6 +184,7 @@ function updateTime() {
                             chrome.storage.local.get(["events"]).then((result) => {
                                 let currentTimeIndex = parseInt((presentHour * 60 + presentMinute) / 15);
                                 for (let i = 0; i < result.events.length; i++) {
+                                    let inEvent = false;
                                     let e = result.events[i];
                                     console.log(e);
                                     // console.log(e.date);
