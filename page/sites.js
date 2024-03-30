@@ -122,18 +122,6 @@ document.getElementById("submit-time").onclick = function() {
     document.getElementById("blocked-site-time").value = "";
 }
 
-document.getElementById("overlay").onclick = function() {
-    document.getElementById("overlay").style.display = "none";
-}
-
-document.getElementById("overlayButton").onclick = function() {
-    // const div = document.createElement("div");
-    // div.textContent = "STOP SCROLLING";
-    // document.body.insertBefore(div, document.body.firstChild);
-    // div.setAttribute("id","overlay");
-    document.getElementById("overlay").style.display = "block";
-}
-
 window.onload = () => {
 
     let checkbox = document.getElementById("cbx-51");
