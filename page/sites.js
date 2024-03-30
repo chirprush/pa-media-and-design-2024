@@ -109,8 +109,14 @@ document.getElementById("submit-block").onclick = function() {
 }
 
 document.getElementById("submit-time").onclick = function() {
-    var time = parseInt(document.getElementById("blocked-site-time").value);
-    var timeLabel = document.getElementById("time-label");
+    let time = parseInt(document.getElementById("blocked-site-time").value);
+
+    if (Number.isNaN(time) || time < 0) {
+        alert("Enter a valid time limit");
+        return;
+    }
+
+    let timeLabel = document.getElementById("time-label");
     timeLabel.innerHTML = "The current time limit for each site is " + time + " seconds";
     chrome.storage.local.set({globalTimeLimit: time}).then(() => {});
     document.getElementById("blocked-site-time").value = "";
